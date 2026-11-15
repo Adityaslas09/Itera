@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PackVote — Group Travel Consensus Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Navigation / Header -->
+  <header class="border-b border-slate-800 bg-slate-900/70 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <i data-lucide="compass" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">PackVote</span>
+          <span class="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">AI Consensus Engine</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="/api/v1/docs" target="_blank" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center space-x-1.5 border border-slate-700">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span>FastAPI Docs</span>
+        </a>
+        <a href="/metrics" target="_blank" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center space-x-1.5 border border-slate-700">
+          <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+          <span>Prometheus Metrics</span>
+        </a>
+        <div class="flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Gateway Active</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero / Portfolio Banner -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-gradient-to-br from-slate-900 via-indigo-950/30 to-slate-900 border border-slate-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="max-w-3xl">
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+          End-to-End Group Travel Consensus Platform
+        </h1>
+        <p class="mt-2 text-sm sm:text-base text-slate-400 leading-relaxed">
+          Orchestrates asynchronous SMS preference surveys via <strong class="text-slate-200">Twilio</strong>, routes reasoning tasks across a unified <strong class="text-slate-200">Multi-Model Gateway</strong> (OpenAI · Anthropic · DeepSeek), runs prompt <strong class="text-slate-200">A/B evaluation</strong> with quantitative metrics, and deterministically resolves consensus via <strong class="text-slate-200">Ranked-Choice Voting (IRV)</strong>.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-2 text-xs font-medium">
+          <span class="px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">⚡ Multi-Model Gateway</span>
+          <span class="px-2.5 py-1 rounded-md bg-violet-500/10 text-violet-300 border border-violet-500/20">📊 A/B Testing & Quantitative Evals</span>
+          <span class="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">🗳️ Instant-Runoff Voting (IRV)</span>
+          <span class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">📱 Twilio SMS Parser</span>
+          <span class="px-2.5 py-1 rounded-md bg-rose-500/10 text-rose-300 border border-rose-500/20">💰 Real-Time Token & Cost Telemetry</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Grid Layout -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+    <!-- Left Column: Trip Overview & SMS Simulator (5 cols) -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Active Trip Selector / Info -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-indigo-400"></i>
+            <h2 class="font-bold text-slate-100 text-sm tracking-wide uppercase">Active Trip</h2>
+          </div>
+          <span id="trip-status-badge" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/20 text-indigo-300 uppercase tracking-wider">Voting</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex justify-between items-baseline">
+            <h3 id="trip-title" class="text-lg font-bold text-white">Annual Friend Reunion 2026</h3>
+          </div>
+          <p id="trip-dates" class="text-xs text-slate-400 flex items-center space-x-1.5">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-500"></i>
+            <span>August 10 - August 18, 2026</span>
+          </p>
+          <p id="trip-organizer" class="text-xs text-slate-400 flex items-center space-x-1.5">
+            <i data-lucide="user" class="w-3.5 h-3.5 text-slate-500"></i>
+            <span>Organizer: Jordan Smith</span>
+          </p>
+        </div>
+
+        <!-- Participants List -->
+        <div class="mt-5">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+            <span>Participants & SMS Surveys</span>
+            <span id="participants-count" class="text-indigo-400 font-mono">3 / 3 Responded</span>
+          </div>
+          <div id="participants-container" class="space-y-2">
+            <!-- Dynamic participant pills rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive SMS Simulator -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg relative">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="smartphone" class="w-4 h-4 text-emerald-400"></i>
+            <h2 class="font-bold text-slate-100 text-sm tracking-wide uppercase">Twilio SMS Simulator</h2>
+          </div>
+          <span class="text-[11px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded font-mono">POST /sms/webhook</span>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">
+          Simulate an incoming SMS reply from a trip member to test the AI preference extraction pipeline in real time:
+        </p>
+        <form id="sms-sim-form" class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Simulated Participant Phone</label>
+            <input id="sms-phone" type="text" value="+15553334444" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">SMS Message Body</label>
+            <textarea id="sms-body" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 placeholder-slate-600 font-sans" placeholder="e.g. I want beaches and warm weather, love seafood, max budget is $1,200!">I really want warm weather and beaches! Budget is $1,300 max. Love local seafood dining.</textarea>
+          </div>
+          <button type="submit" id="sms-submit-btn" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition flex items-center justify-center space-x-1.5 shadow-lg shadow-emerald-600/20">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span>Simulate SMS Inbound Survey</span>
+          </button>
+        </form>
+
+        <!-- SMS Parse Result Callout -->
+        <div id="sms-result-box" class="mt-4 hidden p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs">
+          <div class="font-bold text-emerald-400 flex items-center space-x-1.5 mb-1.5">
+            <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+            <span id="sms-result-title">AI Extracted Preferences</span>
+          </div>
+          <pre id="sms-result-json" class="text-[11px] text-slate-300 overflow-x-auto p-2 bg-slate-900 rounded border border-slate-800"></pre>
+        </div>
+      </div>
+
+      <!-- Live FinOps & Prometheus Telemetry Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="dollar-sign" class="w-4 h-4 text-amber-400"></i>
+            <h2 class="font-bold text-slate-100 text-sm tracking-wide uppercase">Gateway Cost & Telemetry</h2>
+          </div>
+          <button id="refresh-telemetry-btn" class="text-slate-400 hover:text-white transition">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-center">
+          <div class="p-3 bg-slate-950 rounded-lg border border-slate-800">
+            <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Total Cost</span>
+            <span id="telemetry-cost" class="text-lg font-bold text-amber-400 font-mono">$0.00012</span>
+          </div>
+          <div class="p-3 bg-slate-950 rounded-lg border border-slate-800">
+            <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Total Tokens</span>
+            <span id="telemetry-tokens" class="text-lg font-bold text-indigo-400 font-mono">1,480</span>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/60">
+          <span>Total Requests: <strong id="telemetry-requests" class="text-slate-200 font-mono">4</strong></span>
+          <span class="text-[11px] text-slate-500">Live Prometheus Exported</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: AI Gateway, Recommendations & Ranked Choice Arena (7 cols) -->
+    <div class="lg:col-span-7 space-y-6">
+
+      <!-- Model Gateway Control Arena -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="cpu" class="w-4 h-4 text-indigo-400"></i>
+            <h2 class="font-bold text-slate-100 text-sm tracking-wide uppercase">AI Model Gateway & Prompt Routing</h2>
+          </div>
+          <span class="text-[11px] text-slate-400 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-2 py-0.5 rounded font-mono">Unified Interface</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Active AI Provider</label>
+            <select id="gateway-provider" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="mock" selected>Mock Engine (Deterministic Offline Demo)</option>
+              <option value="openai">OpenAI (gpt-4o-mini / gpt-4o)</option>
+              <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
+              <option value="deepseek">DeepSeek (deepseek-chat / reasoner)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Prompt Engineering Variant (A/B)</label>
+            <select id="gateway-prompt-version" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="v2.0-reasoning-constraints" selected>v2.0: Constraint Optimization & Tradeoffs</option>
+              <option value="v1.0-baseline">v1.0: Baseline Prompt (Simple JSON)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <button id="generate-recs-btn" class="py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition flex items-center space-x-2 shadow-lg shadow-indigo-600/20">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Synthesize Group Recommendations</span>
+          </button>
+          <div id="eval-score-badge" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs">
+            <span class="text-slate-400">Quality Score:</span>
+            <span id="eval-score-val" class="font-bold text-emerald-400 font-mono">92.4% (Grade A+)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generated Destinations Cards -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="font-bold text-slate-200 text-sm tracking-wide uppercase flex items-center space-x-2">
+            <i data-lucide="compass" class="w-4 h-4 text-indigo-400"></i>
+            <span>Synthesized Destinations</span>
+          </h2>
+          <span class="text-xs text-slate-400 font-mono" id="dest-count-label">3 Options Available</span>
+        </div>
+
+        <div id="destinations-container" class="space-y-3">
+          <!-- Dynamically populated destination cards with real-time pricing breakdown -->
+        </div>
+      </div>
+
+      <!-- Ranked Choice Voting (IRV) Arena -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="vote" class="w-4 h-4 text-violet-400"></i>
+            <h2 class="font-bold text-slate-100 text-sm tracking-wide uppercase">Ranked-Choice Voting (IRV) Arena</h2>
+          </div>
+          <span class="text-[11px] text-slate-400 bg-violet-500/10 text-violet-300 border border-violet-500/20 px-2 py-0.5 rounded font-mono">Consensus Algorithm</span>
+        </div>
+
+        <p class="text-xs text-slate-400 mb-3">
+          Submit your ranked ballot. When multiple members vote, the Instant-Runoff algorithm redistributes votes from eliminated candidates until a majority consensus (>50%) is declared:
+        </p>
+
+        <div class="space-y-2.5 mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold text-amber-400 w-16">1st Choice:</span>
+            <select id="vote-rank-1" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="dest-lagos">Algarve & Lagos (Portugal)</option>
+              <option value="dest-split">Split & Dalmatian Coast (Croatia)</option>
+              <option value="dest-oaxaca">Oaxaca & Puerto Escondido (Mexico)</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold text-slate-400 w-16">2nd Choice:</span>
+            <select id="vote-rank-2" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="dest-split" selected>Split & Dalmatian Coast (Croatia)</option>
+              <option value="dest-lagos">Algarve & Lagos (Portugal)</option>
+              <option value="dest-oaxaca">Oaxaca & Puerto Escondido (Mexico)</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold text-slate-500 w-16">3rd Choice:</span>
+            <select id="vote-rank-3" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="dest-oaxaca" selected>Oaxaca & Puerto Escondido (Mexico)</option>
+              <option value="dest-lagos">Algarve & Lagos (Portugal)</option>
+              <option value="dest-split">Split & Dalmatian Coast (Croatia)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <button id="cast-vote-btn" class="flex-1 py-2 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs transition flex items-center justify-center space-x-1.5 shadow-lg shadow-violet-600/20">
+            <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
+            <span>Cast Carol's Ranked Ballot</span>
+          </button>
+          <button id="calculate-irv-btn" class="flex-1 py-2 px-3 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs transition flex items-center justify-center space-x-1.5 shadow-lg shadow-amber-600/20">
+            <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
+            <span>Calculate Instant-Runoff Consensus</span>
+          </button>
+        </div>
+
+        <!-- Consensus Results Container -->
+        <div id="irv-result-container" class="mt-4 p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Consensus Determination</span>
+            <span id="irv-winner-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Winner: Algarve & Lagos</span>
+          </div>
+          <div id="irv-rounds-details" class="space-y-2 text-xs">
+            <!-- Dynamic rounds breakdown -->
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800">
+              <span class="font-bold text-indigo-400">Round 1:</span>
+              <span class="text-slate-300 ml-1">Lagos (1 vote), Split (1 vote), Oaxaca (1 vote). No absolute majority. Lowest candidate eliminated.</span>
+            </div>
+            <div class="p-2.5 rounded bg-slate-900 border border-slate-800">
+              <span class="font-bold text-emerald-400">Round 2:</span>
+              <span class="text-slate-300 ml-1">Ballots redistributed. Lagos achieved decisive majority with 2 votes (66.7%). Consensus reached!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Interactive JavaScript -->
+  <script>
+    const currentTripId = "demo-trip-1";
+
+    // Load Initial Data on Mount
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      fetchTripDetails();
+      fetchRecommendations();
+      fetchTelemetry();
+      setupEventListeners();
+    });
+
+    async function fetchTripDetails() {
+      try {
+        const res = await fetch(`/api/v1/trips/${currentTripId}`);
+        if (!res.ok) return;
+        const trip = await res.json();
+        document.getElementById("trip-title").textContent = trip.title;
+        document.getElementById("trip-dates").querySelector("span").textContent = trip.estimated_dates || "Summer 2026";
+        document.getElementById("trip-organizer").querySelector("span").textContent = `Organizer: ${trip.organizer_name}`;
+        
+        renderParticipants(trip.participants);
+      } catch (e) {
+        console.error("Error loading trip:", e);
+      }
+    }
+
+    function renderParticipants(participants) {
+      const container = document.getElementById("participants-container");
+      container.innerHTML = "";
+      let completedCount = 0;
+
+      participants.forEach(p => {
+        if (p.survey_status === "completed") completedCount++;
+        const card = document.createElement("div");
+        card.className = "p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-xs flex items-center justify-between";
+        
+        const isCompleted = p.survey_status === "completed";
+        const budgetStr = p.preferences && p.preferences.budget_max_usd ? `$${p.preferences.budget_max_usd.toFixed(0)}` : "Flexible";
+        const climateStr = p.preferences ? p.preferences.preferred_climate : "Any";
+
+        card.innerHTML = `
+          <div>
+            <div class="font-bold text-slate-200 flex items-center space-x-1.5">
+              <span>${p.name}</span>
+              <span class="text-[10px] text-slate-500 font-mono">(${p.phone_number})</span>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-0.5">
+              ${isCompleted ? `<span class="text-emerald-400 font-medium">Preferences:</span> Budget ${budgetStr} · ${climateStr}` : '<span class="text-amber-400">Survey SMS pending response...</span>'}
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${isCompleted ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}">
+            ${isCompleted ? 'Responded' : 'Pending'}
+          </span>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById("participants-count").textContent = `${completedCount} / ${participants.length} Responded`;
+    }
+
+    async function fetchRecommendations() {
+      try {
+        const res = await fetch(`/api/v1/trips/${currentTripId}/recommendations`);
+        if (!res.ok) return;
+        const recs = await res.json();
+        renderRecommendations(recs);
+      } catch (e) {
+        console.error("Error loading recommendations:", e);
+      }
+    }
+
+    function renderRecommendations(recs) {
+      const container = document.getElementById("destinations-container");
+      container.innerHTML = "";
+      document.getElementById("dest-count-label").textContent = `${recs.length} Options Available`;
+
+      recs.forEach((d, idx) => {
+        const card = document.createElement("div");
+        card.className = "p-4 rounded-xl bg-slate-900 border border-slate-800 shadow-md space-y-3 transition hover:border-slate-700";
+        
+        const price = d.pricing || { flight_estimate_usd: 450, lodging_estimate_usd: 400, food_activities_estimate_usd: 350, total_estimate_usd: d.estimated_budget_usd };
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">#${idx + 1}</span>
+                <h3 class="font-bold text-white text-base">${d.destination_name}, <span class="text-slate-400">${d.country}</span></h3>
+              </div>
+              <p class="text-xs text-indigo-300 font-medium mt-1">${d.tagline}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-400 block">Est. Budget</span>
+              <span class="text-base font-extrabold text-amber-400 font-mono">$${d.estimated_budget_usd.toFixed(0)}</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">${d.description}</p>
+          
+          <div class="flex flex-wrap gap-1.5 text-[11px]">
+            ${d.matched_features.map(f => `<span class="px-2 py-0.5 rounded bg-slate-950 text-slate-300 border border-slate-800">✓ ${f}</span>`).join('')}
+          </div>
+
+          <!-- Real-Time Pricing Agent Breakdown -->
+          <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800/80 flex items-center justify-between text-[11px]">
+            <div class="flex items-center space-x-1.5 text-slate-400">
+              <i data-lucide="plane" class="w-3.5 h-3.5 text-indigo-400"></i>
+              <span>Flight: <strong class="text-slate-200 font-mono">$${price.flight_estimate_usd.toFixed(0)}</strong></span>
+            </div>
+            <div class="flex items-center space-x-1.5 text-slate-400">
+              <i data-lucide="home" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>Lodging: <strong class="text-slate-200 font-mono">$${price.lodging_estimate_usd.toFixed(0)}</strong></span>
+            </div>
+            <div class="flex items-center space-x-1.5 text-slate-400">
+              <i data-lucide="utensils" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Food & Passes: <strong class="text-slate-200 font-mono">$${price.food_activities_estimate_usd.toFixed(0)}</strong></span>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-rose-300/80 flex items-center space-x-1">
+            <span class="font-bold">Trade-off:</span>
+            <span>${d.tradeoffs_or_drawbacks}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    async function fetchTelemetry() {
+      try {
+        const res = await fetch("/api/v1/gateway/usage");
+        if (!res.ok) return;
+        const data = await res.json();
+        const telem = data.telemetry;
+        document.getElementById("telemetry-cost").textContent = `$${telem.total_cost_usd.toFixed(5)}`;
+        document.getElementById("telemetry-tokens").textContent = (telem.total_prompt_tokens + telem.total_completion_tokens).toLocaleString();
+        document.getElementById("telemetry-requests").textContent = telem.total_requests;
+      } catch (e) {
+        console.error("Telemetry error:", e);
+      }
+    }
+
+    function setupEventListeners() {
+      // SMS Simulator Form
+      document.getElementById("sms-sim-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById("sms-submit-btn");
+        btn.disabled = true;
+        btn.innerHTML = `<span class="animate-spin mr-1.5">⏳</span> Parsing via AI Gateway...`;
+
+        const phone = document.getElementById("sms-phone").value;
+        const body = document.getElementById("sms-body").value;
+
+        try {
+          const res = await fetch("/api/v1/sms/simulate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              trip_id: currentTripId,
+              participant_phone: phone,
+              message_body: body
+            })
+          });
+          const data = await res.json();
+          document.getElementById("sms-result-box").classList.remove("hidden");
+          document.getElementById("sms-result-json").textContent = JSON.stringify(data.parsed_preferences, null, 2);
+          fetchTripDetails();
+          fetchTelemetry();
+        } catch (err) {
+          alert("Error simulating SMS: " + err);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="send" class="w-3.5 h-3.5 mr-1.5"></i><span>Simulate SMS Inbound Survey</span>`;
+          lucide.createIcons();
+        }
+      });
+
+      // Generate Recommendations
+      document.getElementById("generate-recs-btn").addEventListener("click", async () => {
+        const btn = document.getElementById("generate-recs-btn");
+        btn.disabled = true;
+        btn.innerHTML = `<span class="animate-spin mr-1.5">⏳</span> Running Synthesis & Evals...`;
+
+        const provider = document.getElementById("gateway-provider").value;
+        const promptVersion = document.getElementById("gateway-prompt-version").value;
+
+        try {
+          const url = `/api/v1/trips/${currentTripId}/generate-recommendations?provider=${provider}&prompt_version=${promptVersion}`;
+          const res = await fetch(url, { method: "POST" });
+          const data = await res.json();
+          renderRecommendations(data.destinations);
+          fetchTelemetry();
+
+          // Fetch Evals
+          const evalRes = await fetch(`/api/v1/evals/${currentTripId}`);
+          if (evalRes.ok) {
+            const evalData = await evalRes.json();
+            const pct = (evalData.composite_score * 100).toFixed(1);
+            document.getElementById("eval-score-val").textContent = `${pct}% (Grade ${evalData.grade})`;
+          }
+        } catch (err) {
+          alert("Error generating recommendations: " + err);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1.5"></i><span>Synthesize Group Recommendations</span>`;
+          lucide.createIcons();
+        }
+      });
+
+      // Cast Vote
+      document.getElementById("cast-vote-btn").addEventListener("click", async () => {
+        const r1 = document.getElementById("vote-rank-1").value;
+        const r2 = document.getElementById("vote-rank-2").value;
+        const r3 = document.getElementById("vote-rank-3").value;
+
+        try {
+          const res = await fetch(`/api/v1/votes/${currentTripId}/ballot`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              participant_id: "p-carol",
+              ranked_destination_ids: [r1, r2, r3]
+            })
+          });
+          const data = await res.json();
+          alert("Carol's ranked ballot recorded successfully!");
+        } catch (err) {
+          alert("Error casting vote: " + err);
+        }
+      });
+
+      // Calculate IRV Consensus
+      document.getElementById("calculate-irv-btn").addEventListener("click", async () => {
+        try {
+          const res = await fetch(`/api/v1/votes/${currentTripId}/consensus`);
+          const data = await res.json();
+          
+          document.getElementById("irv-winner-badge").textContent = `Winner: ${data.winner_name || 'None'}`;
+          const container = document.getElementById("irv-rounds-details");
+          container.innerHTML = "";
+
+          data.rounds.forEach(r => {
+            const div = document.createElement("div");
+            div.className = "p-2.5 rounded bg-slate-900 border border-slate-800";
+            div.innerHTML = `
+              <div class="font-bold text-indigo-400 mb-1">Round ${r.round_number}: ${r.eliminated ? `<span class="text-rose-400">Eliminated ${r.eliminated}</span>` : '<span class="text-emerald-400">Consensus Decided!</span>'}</div>
+              <div class="text-slate-300">${r.explanation}</div>
+              <div class="text-[11px] text-slate-400 font-mono mt-1">Tallies: ${JSON.stringify(r.vote_counts)}</div>
+            `;
+            container.appendChild(div);
+          });
+        } catch (err) {
+          alert("Error calculating consensus: " + err);
+        }
+      });
+
+      // Refresh telemetry
+      document.getElementById("refresh-telemetry-btn").addEventListener("click", () => {
+        fetchTelemetry();
+      });
+    }
+  </script>
+</body>
+</html>
