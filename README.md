@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![CI Pipeline](https://github.com/your-username/itera/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/itera/actions)
+[![CI Pipeline](https://github.com/Adityaslas09/itera/actions/workflows/ci.yml/badge.svg)](https://github.com/Adityaslas09/itera/actions)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Multi-Model Gateway](https://img.shields.io/badge/AI%20Gateway-OpenAI%20%7C%20Anthropic%20%7C%20DeepSeek-purple.svg)](https://github.com)
@@ -118,7 +118,7 @@ Simulates or scans real-time flight estimates, lodging tier medians (hostel, vac
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-username/itera.git
+git clone https://github.com/Adityaslas09/itera.git
 cd itera
 
 # 2. Create and activate virtual environment
