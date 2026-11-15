@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: packvote-consensus-engine
+    name: itera-consensus-engine
     env: python
     region: oregon
     plan: free

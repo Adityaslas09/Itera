@@ -24,9 +24,9 @@ async def twilio_inbound_webhook(
     if participant and participant.preferences:
         prefs = participant.preferences
         budget_str = f"${prefs.budget_max_usd:.0f}" if prefs.budget_max_usd else "flexible"
-        reply_text = f"PackVote: Thanks {participant.name}! Captured: Budget {budget_str}, Climate {prefs.preferred_climate or 'any'}. We'll notify you when voting begins!"
+        reply_text = f"Itera: Thanks {participant.name}! Captured: Budget {budget_str}, Climate {prefs.preferred_climate or 'any'}. We'll notify you when voting begins!"
     else:
-        reply_text = "PackVote: Thank you for your response! Your travel preferences have been logged."
+        reply_text = "Itera: Thank you for your response! Your travel preferences have been logged."
 
     # Return standard Twilio TwiML XML
     xml_content = f'<?xml version="1.0" encoding="UTF-8"?><Response><Message>{reply_text}</Message></Response>'

@@ -10,7 +10,7 @@ from backend.app.gateway.deepseek_provider import DeepSeekProvider
 from backend.app.gateway.mock_provider import MockProvider
 from backend.app.core import metrics
 
-logger = logging.getLogger("packvote.gateway")
+logger = logging.getLogger("itera.gateway")
 
 class ModelGateway:
     """

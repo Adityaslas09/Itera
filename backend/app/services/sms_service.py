@@ -7,7 +7,7 @@ from backend.app.gateway.model_gateway import gateway
 from backend.app.prompts.templates import SURVEY_EXTRACTION_SYSTEM_PROMPT
 from backend.app.core import metrics
 
-logger = logging.getLogger("packvote.sms")
+logger = logging.getLogger("itera.sms")
 
 class SMSService:
     """

@@ -110,7 +110,7 @@ class MockProvider(BaseLLMProvider):
             }, indent=2)
 
         else:
-            content = "PackVote AI Gateway: Request processed successfully using simulated engine."
+            content = "Itera AI Gateway: Request processed successfully using simulated engine."
 
         latency_ms = (time.perf_counter() - start_time) * 1000.0
         prompt_tokens = len(prompt) // 4 + 20

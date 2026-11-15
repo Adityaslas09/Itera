@@ -10,12 +10,12 @@ def test_health_check_endpoint():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "healthy"
-    assert data["service"] == "PackVote"
+    assert data["service"] == "Itera"
 
 def test_prometheus_metrics_endpoint():
     response = client.get("/metrics")
     assert response.status_code == 200
-    assert b"packvote_ai_requests_total" in response.content
+    assert b"itera_ai_requests_total" in response.content
 
 def test_twilio_webhook_endpoint():
     form_data = {

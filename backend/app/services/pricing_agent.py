@@ -5,7 +5,7 @@ from backend.app.gateway.model_gateway import gateway
 from backend.app.prompts.templates import PRICING_AGENT_SYSTEM_PROMPT
 from backend.app.models.schemas import PricingBreakdown
 
-logger = logging.getLogger("packvote.pricing_agent")
+logger = logging.getLogger("itera.pricing_agent")
 
 class RealtimePricingAgent:
     """

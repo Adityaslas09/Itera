@@ -17,7 +17,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("packvote")
+logger = logging.getLogger("itera")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -72,4 +72,4 @@ async def root():
     index_path = os.path.join(static_dir, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    return HTMLResponse("<h1>PackVote API is running! Access docs at <a href='/api/v1/docs'>/api/v1/docs</a></h1>")
+    return HTMLResponse("<h1>Itera API is running! Access docs at <a href='/api/v1/docs'>/api/v1/docs</a></h1>")

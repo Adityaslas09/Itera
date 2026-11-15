@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  packvote-api:
+  itera-api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: packvote-api
+    container_name: itera-api
     ports:
       - "8000:8000"
     environment:
@@ -24,7 +24,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.52.0
-    container_name: packvote-prometheus
+    container_name: itera-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -34,4 +34,4 @@ services:
       - '--storage.tsdb.path=/prometheus'
     restart: unless-stopped
     depends_on:
-      - packvote-api
+      - itera-api

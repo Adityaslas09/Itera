@@ -1,15 +1,15 @@
-# 🧭 PackVote — Group Travel Consensus Engine
+# 🧭 Itera — Autonomous Group Travel Consensus Engine
 
 <div align="center">
 
-[![CI Pipeline](https://github.com/your-username/packvote/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/packvote/actions)
+[![CI Pipeline](https://github.com/your-username/itera/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/itera/actions)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Multi-Model Gateway](https://img.shields.io/badge/AI%20Gateway-OpenAI%20%7C%20Anthropic%20%7C%20DeepSeek-purple.svg)](https://github.com)
 [![Observability](https://img.shields.io/badge/Prometheus-Metrics%20Live-E6522C.svg?logo=prometheus&logoColor=white)](http://localhost:8000/metrics)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**An end-to-end, production-grade group travel platform that coordinates SMS surveys via Twilio, routes reasoning tasks across a unified Multi-Model Gateway, benchmarks prompts using automated quantitative evaluations, and achieves mathematical group consensus via Ranked-Choice Voting (IRV).**
+**An end-to-end, production-grade group travel platform that coordinates asynchronous SMS surveys via Twilio, routes reasoning tasks across a unified Multi-Model Gateway, benchmarks prompts using automated quantitative evaluations, and achieves mathematical group consensus via Ranked-Choice Voting (IRV).**
 
 [Live Web Demo](#-quickstart-in-60-seconds) · [System Architecture](#-system-architecture) · [AI Engineering Highlights](#-key-ai-engineering-highlights) · [API Docs](#-api-reference)
 
@@ -21,8 +21,8 @@
 
 Planning group trips is notoriously frustrating: conflicting dates, asymmetrical budgets, divergent activity preferences, and fragmented group chats regularly lead to decision paralysis. 
 
-**PackVote** solves this end-to-end:
-1. **Low Friction Data Collection:** Trip members don't need to create accounts or download apps—they simply reply to an automated **Twilio SMS** survey with natural language.
+**Itera** (from the Latin root *iter*, meaning journey or voyage) solves this end-to-end:
+1. **Low-Friction Data Collection:** Trip members don't need to create accounts or download apps—they simply reply to an automated **Twilio SMS** survey with natural language.
 2. **Intelligent Preference Extraction:** Natural language SMS replies are parsed into structured schemas with constraint bounds.
 3. **Multi-Model Recommendation Synthesis:** A unified **AI Model Gateway** routes tasks across OpenAI, Anthropic, or DeepSeek depending on cost and reasoning requirements.
 4. **Autonomous Pricing Intelligence:** A pricing agent scans real-time flight, lodging, and activity expenses.
@@ -75,7 +75,7 @@ flowchart TD
 ## 🚀 Key AI Engineering Highlights
 
 ### 1. Unified Multi-Model Gateway (`backend/app/gateway/`)
-Instead of coupling business logic to a single proprietary SDK, PackVote implements an abstract provider interface (`BaseLLMProvider`) supporting **OpenAI**, **Anthropic**, and **DeepSeek**, alongside a high-fidelity **Mock Provider** for zero-cost local evaluation.
+Instead of coupling business logic to a single proprietary SDK, Itera implements an abstract provider interface (`BaseLLMProvider`) supporting **OpenAI**, **Anthropic**, and **DeepSeek**, alongside a high-fidelity **Mock Provider** for zero-cost local evaluation.
 * **Task-Based Routing:** Routes cheap extraction jobs (`survey_extraction`) to high-throughput models and complex trade-off balancing (`recommendation_synthesis`) to frontier reasoning models.
 * **Resilience & Fallback:** Automatically degrades gracefully to secondary models or offline mock engines if credentials or provider outages occur.
 * **Real-time Cost Attribution:** Computes per-token inference cost in USD based on current token pricing tiers.
@@ -99,15 +99,15 @@ Implements true **Instant-Runoff Voting (IRV)**:
 4. Produces an audit-ready, round-by-round explanation logged for the UI.
 
 ### 5. Autonomous Real-Time Pricing Agent (`backend/app/services/pricing_agent.py`)
-Simulates or scrapes real-time flight estimates, lodging tier medians (hostel, vacation rental, boutique hotel), and daily meal/pass budgets based on origin airport and seasonality.
+Simulates or scans real-time flight estimates, lodging tier medians (hostel, vacation rental, boutique hotel), and daily meal/pass budgets based on origin airport and seasonality.
 
 ### 6. Production Observability & FinOps (`backend/app/core/metrics.py`)
 * Native **Prometheus metrics** exported at `/metrics`:
-  * `packvote_ai_requests_total{provider, model, status, task}`
-  * `packvote_ai_latency_seconds{provider, model}`
-  * `packvote_ai_token_usage_total{provider, model, token_type}`
-  * `packvote_ai_estimated_cost_usd_total{provider, model}`
-  * `packvote_votes_cast_total`
+  * `itera_ai_requests_total{provider, model, status, task}`
+  * `itera_ai_latency_seconds{provider, model}`
+  * `itera_ai_token_usage_total{provider, model, token_type}`
+  * `itera_ai_estimated_cost_usd_total{provider, model}`
+  * `itera_votes_cast_total`
 * In-memory token bucket rate limiting via `SlowAPI`.
 
 ---
@@ -118,8 +118,8 @@ Simulates or scrapes real-time flight estimates, lodging tier medians (hostel, v
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-username/packvote.git
-cd packvote
+git clone https://github.com/your-username/itera.git
+cd itera
 
 # 2. Create and activate virtual environment
 python -m venv .venv
@@ -151,14 +151,14 @@ Launch the API alongside a pre-configured Prometheus instance with one command:
 ```bash
 docker compose up --build
 ```
-* **PackVote Application:** `http://localhost:8000`
+* **Itera Application:** `http://localhost:8000`
 * **Prometheus Dashboard:** `http://localhost:9090`
 
 ---
 
 ## 🧪 Test Suite & Quality Assurance
 
-PackVote includes an end-to-end pytest test suite covering unit logic, AI pipeline mocks, and FastAPI routes:
+Itera includes an end-to-end pytest test suite covering unit logic, AI pipeline mocks, and FastAPI routes:
 
 ```bash
 # Run pytest with detailed coverage
@@ -215,7 +215,7 @@ A production-ready `render.yaml` blueprint is included:
 3. Set your optional API keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `DEEPSEEK_API_KEY`, `TWILIO_ACCOUNT_SID`).
 
 ### Deploying on Railway / Fly.io
-PackVote adheres to the 12-factor application standard and runs directly from the included multi-stage `Dockerfile`:
+Itera adheres to the 12-factor application standard and runs directly from the included multi-stage `Dockerfile`:
 ```bash
 fly launch
 # or

@@ -2,7 +2,7 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: "packvote-api"
+  - job_name: "itera-api"
     metrics_path: "/metrics"
     static_configs:
-      - targets: ["packvote-api:8000"]
+      - targets: ["itera-api:8000"]

@@ -1,5 +1,5 @@
 """
-Versioned Prompt Repository for PackVote.
+Versioned Prompt Repository for Itera.
 Allows systematic testing, A/B evaluation, and prompt regression benchmarking.
 """
 
